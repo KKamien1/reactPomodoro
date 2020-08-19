@@ -68,24 +68,7 @@
 
 <body>
     <h1>Kurs Reacta Tydzień 2!</h1>
-    <div class="App">
-        <div class="TimeboxEditor">
-            <label>Co robisz?<input type="text" value="Uczę się skrótów klawiszowych"></label>
-            <label>Ile minut<input type="text" value="25"></label>
-            <button>Zacznij</button>
-        </div>
-        <div class="Timebox">
-            <h1>Uczę się skrótów kalwiszowych</h1>
-            <div id="root"></div>
-            <div id="progress"></div>
-            <div id="progress2"></div>
-            <div id="progress3"></div>
-            <button disabled>Zacznij</button>
-            <button>Stop</button>
-            <button>Pauza</button>
-            Liczba przerw:2
-        </div>
-    </div>
+    <div id="App"></div>
     <hr>
     <script type="text/babel">
         function Clock({ hours = 34, minutes = -77, seconds = -77, miliseconds = 3 }) {
@@ -107,10 +90,46 @@
 
             return (<div className="ProgressBar" style={{ [padding]: `${100 - procent}%` }} ></div>)
         }
-        ReactDOM.render(<Clock />, document.getElementById('root'));
-        ReactDOM.render(<ProgressBar trackRemaining />, document.getElementById('progress'));
-        ReactDOM.render(<ProgressBar procent={33} trackRemaining />, document.getElementById('progress2'));
-        ReactDOM.render(<ProgressBar procent={90} />, document.getElementById('progress3'));
+
+        class TimeBox extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    isRunning: true,
+                    isPaused: true,
+                    paeusesCount: 0
+                }
+            }
+            render() {
+                const { isRunning, isPaused, paeusesCount } = this.state;
+                return (
+                    [<div className="Timebox">
+                        <h1>Uczę się skrótów kalwiszowych</h1>
+                        <Clock />
+                        <ProgressBar />
+                        <button disabled={isRunning}>Zacznij</button>
+                        <button disabled={!isRunning}>Stop</button>
+                        <button disabled={!isRunning}>{isPaused ? 'Wznów' : 'Pauza'}</button>
+                        LIczba przerw: {paeusesCount}
+                    </div>]
+                )
+            }
+        }
+        function TimeBoxEditor(params) {
+            return (
+                <div className="TimeboxEditor">
+                    <label>Co robisz?<input type="text" value="Uczę się skrótów klawiszowych" /></label>
+                    <label>Ile minut<input type="text" value="25" /></label>
+                    <button>Zacznij</button>
+                </div>
+            )
+        }
+        function App(params) {
+            return (
+                [<TimeBox />, <TimeBoxEditor />]
+            )
+        }
+        ReactDOM.render(<App />, document.getElementById('App'));
     </script>
 </body>
 
