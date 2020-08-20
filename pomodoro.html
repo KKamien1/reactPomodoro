@@ -51,13 +51,21 @@
 
         .ProgressBar {
             position: relative;
-            border: 1px solid orangered;
-            border-radius: 5px;
             height: 25px;
-            margin-bottom: 5px;
-            padding: 5px 3px;
+            margin-bottom: 10px;
             background: orangered;
             background-clip: content-box;
+        }
+        .ProgressBar:before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 5px;
+            border: 1px solid orangered;
         }
 
         .inactive {
@@ -85,31 +93,86 @@
             return (<h2 className="Clock">Pozostało {h}:{m}:{s}.{ms}</h2>);
         }
 
-        function ProgressBar({ trackRemaining = false, procent = 10 }) {
+        function ProgressBar({ className, trackRemaining = false, procent = 10 }) {
             const padding = trackRemaining ? 'paddingLeft' : 'paddingRight';
 
-            return (<div className="ProgressBar" style={{ [padding]: `${100 - procent}%` }} ></div>)
+            return (<div className={"ProgressBar " + className} style={{ [padding]: `${100 - procent}%` }} ></div>)
         }
 
         class TimeBox extends React.Component {
             constructor(props) {
                 super(props);
                 this.state = {
-                    isRunning: true,
-                    isPaused: true,
-                    paeusesCount: 0
+                    isRunning: false,
+                    isPaused: false,
+                    paeusesCount: 0,
+                    elapsedTimeInSeconds: 0
                 }
+                this.handleStart = this.handleStart.bind(this);
+                this.handleStop = this.handleStop.bind(this);
+                this.togglePause = this.togglePause.bind(this);
+            }
+            handleStart() {
+                this.setState({
+                    isRunning: true,
+                });
+                this.startTimer();
+            }
+            handleStop(e) {
+                this.setState({
+                    isRunning: false,
+                    isPaused: false,
+                    paeusesCount: 0,
+                    elapsedTimeInSeconds: 0
+                });
+                this.stopTimer()
+            }
+            startTimer() {
+                this.intervalId = window.setInterval(
+                    () => {
+                        this.setState(
+                            (prevState) => ({ elapsedTimeInSeconds: prevState.elapsedTimeInSeconds + 0.1 })
+                        )
+                    },
+                    100
+                );
+            }
+            stopTimer() {
+                window.clearInterval(this.intervalId);
+            }
+            togglePause() {
+                this.setState(
+                    function (prevState) {
+                        const isPaused = !prevState.isPaused;
+                        if (isPaused) {
+                            this.stopTimer();
+                        } else {
+                            this.startTimer();
+                        }
+                        return {
+                            isPaused,
+                            paeusesCount: isPaused ? prevState.paeusesCount + 1 : prevState.paeusesCount
+                        }
+                    }
+                )
             }
             render() {
-                const { isRunning, isPaused, paeusesCount } = this.state;
+                const { isRunning, isPaused, paeusesCount, elapsedTimeInSeconds } = this.state;
+                const totalTimeInSeconds = 3 * 60;
+                const timeLeftInSeconds = totalTimeInSeconds - elapsedTimeInSeconds;
+
+                const minutesLeft = Math.floor(timeLeftInSeconds / 60);
+                const secondsLeft = Math.floor(timeLeftInSeconds % 60);
+                const progressInPercent = (elapsedTimeInSeconds / totalTimeInSeconds) * 100;
+
                 return (
                     [<div className="Timebox">
                         <h1>Uczę się skrótów kalwiszowych</h1>
-                        <Clock />
-                        <ProgressBar />
-                        <button disabled={isRunning}>Zacznij</button>
-                        <button disabled={!isRunning}>Stop</button>
-                        <button disabled={!isRunning}>{isPaused ? 'Wznów' : 'Pauza'}</button>
+                        <Clock minutes={minutesLeft} seconds={secondsLeft} className={isPaused ? 'inactive' : ''} />
+                        <ProgressBar procent={progressInPercent} className={isPaused ? 'inactive' : ''} />
+                        <button onClick={this.handleStart} disabled={isRunning}>Zacznij</button>
+                        <button onClick={this.handleStop} disabled={!isRunning}>Stop</button>
+                        <button onClick={this.togglePause} disabled={!isRunning}>{isPaused ? 'Wznów' : 'Pauza'}</button>
                         LIczba przerw: {paeusesCount}
                     </div>]
                 )
@@ -125,9 +188,7 @@
             )
         }
         function App(params) {
-            return (
-                [<TimeBox />, <TimeBoxEditor />]
-            )
+            return [<TimeBox />, <TimeBoxEditor />];
         }
         ReactDOM.render(<App />, document.getElementById('App'));
     </script>
