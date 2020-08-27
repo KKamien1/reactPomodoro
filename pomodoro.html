@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-    <title>Kurs Reacta - Tydzień 2!</title>
+    <title>Kurs Reacta - Tydzień 3! Listy i formularze</title>
     <style>
         .App {
             font-family: sans-serif;
@@ -158,7 +158,8 @@
             }
             render() {
                 const { isRunning, isPaused, paeusesCount, elapsedTimeInSeconds } = this.state;
-                const totalTimeInSeconds = 3 * 60;
+                const {title, totalTimeInMinutes, isEditable, onEdit} = this.props;
+                const totalTimeInSeconds = parseInt(totalTimeInMinutes, 10) * 60;
                 const timeLeftInSeconds = totalTimeInSeconds - elapsedTimeInSeconds;
 
                 const minutesLeft = Math.floor(timeLeftInSeconds / 60);
@@ -167,10 +168,11 @@
 
                 return (
                     [<div className="Timebox">
-                        <h1>Uczę się skrótów kalwiszowych</h1>
+                        <h1>{title}</h1>
                         <Clock minutes={minutesLeft} seconds={secondsLeft} className={isPaused ? 'inactive' : ''} />
                         <ProgressBar procent={progressInPercent} className={isPaused ? 'inactive' : ''} />
                         <button onClick={this.handleStart} disabled={isRunning}>Zacznij</button>
+                        <button onClick={onEdit} disabled={isEditable}>Edytuj</button>
                         <button onClick={this.handleStop} disabled={!isRunning}>Stop</button>
                         <button onClick={this.togglePause} disabled={!isRunning}>{isPaused ? 'Wznów' : 'Pauza'}</button>
                         LIczba przerw: {paeusesCount}
@@ -178,17 +180,57 @@
                 )
             }
         }
-        function TimeBoxEditor(params) {
+        
+        function TimeBoxEditor(props) {
+            
+            const {title, totalTimeInMinutes, onStateChange, isEditable, onConfirm} = props;
+
             return (
-                <div className="TimeboxEditor">
-                    <label>Co robisz?<input type="text" value="Uczę się skrótów klawiszowych" /></label>
-                    <label>Ile minut<input type="text" value="25" /></label>
-                    <button>Zacznij</button>
+                <div className="TimeboxEditor" className={isEditable ? '' : 'inactive'}>
+                    <label>Co robisz?
+                        <input 
+                            name="title"
+                            disabled={false}
+                            type="text"
+                            onChange={onStateChange} 
+                            value={title} />
+                    </label>
+                    <label>Ile minut
+                        <input 
+                            name="totalTimeInMinutes"
+                            disabled={false}
+                            type="text"
+                            onChange={onStateChange} 
+                            value={totalTimeInMinutes} />
+                    </label>
+                    <button disabled={false} onClick={onConfirm}>Zatwierdź zmiany</button>
                 </div>
             )
         }
+
+        class EditableTimebox extends React.Component {
+            state = {
+                title: "Uczę się skrótów klawiszowych",
+                totalTimeInMinutes: 15,
+                isEditable: true
+            }
+            handleChange = ({target:{name,value}}) => this.setState({[name]:value});
+            handleConfirm = () => this.setState({isEditable: false});
+            handleEdit = () => this.setState({isEditable: true});
+            render() {
+                const {title, totalTimeInMinutes, isEditable} = this.state;
+
+                return [
+                    <TimeBox title={title} totalTimeInMinutes={totalTimeInMinutes} onEdit={this.handleEdit} isEditable={isEditable} />,
+                    <TimeBoxEditor title={title} totalTimeInMinutes={totalTimeInMinutes} onStateChange={this.handleChange} isEditable={isEditable} onConfirm={this.handleConfirm} />
+                ]
+            }
+        }
+        
+        
+
         function App(params) {
-            return [<TimeBox />, <TimeBoxEditor />];
+            return [<EditableTimebox />];
         }
         ReactDOM.render(<App />, document.getElementById('App'));
     </script>
