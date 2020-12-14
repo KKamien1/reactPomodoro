@@ -11,7 +11,11 @@ function Clock({ hours = 34, minutes = -77, seconds = -77, miliseconds = 3 }) {
     const ms = to1000(miliseconds);
     const [m, s] = [minutes, seconds].map(to60);
 
-    return (<h2 className="Clock">Pozostało {h}:{m}:{s}.{ms}</h2>);
+    return (<h2 className="clock">Pozostało {h}:
+        <span className="clock__min">{m}</span>
+        <span className="clock__sepator">:</span>
+        <span className="clock__sec">{s}</span>
+        .{ms}</h2>);
 }
 
 export default Clock;
