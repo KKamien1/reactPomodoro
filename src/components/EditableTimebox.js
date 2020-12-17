@@ -15,10 +15,14 @@ export default class EditableTimebox extends React.Component {
     render() {
         const { title, totalTimeInMinutes, isEditable } = this.state;
 
-        return [
-            <CurrentTimebox title={title} totalTimeInMinutes={totalTimeInMinutes} onEdit={this.handleEdit} isEditable={isEditable} />,
-            <TimeBoxEditor title={title} totalTimeInMinutes={totalTimeInMinutes} onStateChange={this.handleChange} isEditable={isEditable} onConfirm={this.handleConfirm} />
-        ]
+        return (
+            <>
+                {isEditable ?
+                    (<TimeBoxEditor title={title} totalTimeInMinutes={totalTimeInMinutes} onStateChange={this.handleChange} isEditable={isEditable} onConfirm={this.handleConfirm} />)
+                    : (<CurrentTimebox title={title} totalTimeInMinutes={totalTimeInMinutes} onEdit={this.handleEdit} isEditable={isEditable} />)
+                }
+            </>
+        )
     }
 }
 

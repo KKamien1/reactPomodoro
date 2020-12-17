@@ -7,6 +7,7 @@ import ProgressBar from './ProgressBar';
 
 export default class CurrentTimebox extends React.Component {
     constructor(props) {
+        console.count("constructor")
         super(props);
         this.state = {
             isRunning: false,
@@ -18,6 +19,16 @@ export default class CurrentTimebox extends React.Component {
         this.handleStop = this.handleStop.bind(this);
         this.togglePause = this.togglePause.bind(this);
     }
+    componentDidMount() {
+        console.count("Component DidMount")
+    }
+    componentDidUpdate() {
+        console.count("Component DidUpdate")
+    }
+    componentWillUnmount() {
+        this.stopTimer();
+    }
+
     handleStart() {
         this.setState({
             isRunning: true,
@@ -49,6 +60,7 @@ export default class CurrentTimebox extends React.Component {
     togglePause() {
         this.setState(
             function (prevState) {
+                console.count("setState");
                 const isPaused = !prevState.isPaused;
                 if (isPaused) {
                     this.stopTimer();
@@ -63,6 +75,7 @@ export default class CurrentTimebox extends React.Component {
         )
     }
     render() {
+        console.count('Render')
         const { isRunning, isPaused, paeusesCount, elapsedTimeInSeconds } = this.state;
         const { title, totalTimeInMinutes, isEditable, onEdit } = this.props;
         const totalTimeInSeconds = parseInt(totalTimeInMinutes, 10) * 60;
