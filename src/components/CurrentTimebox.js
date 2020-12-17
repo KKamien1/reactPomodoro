@@ -86,16 +86,18 @@ export default class CurrentTimebox extends React.Component {
         const progressInPercent = (elapsedTimeInSeconds / totalTimeInSeconds) * 100;
 
         return (
-            [<div className="TimeBox">
-                <h1>{title}</h1>
-                <Clock minutes={minutesLeft} seconds={secondsLeft} className={isPaused ? 'inactive' : ''} />
-                <ProgressBar procent={progressInPercent} className={isPaused ? 'inactive' : ''} />
-                <button onClick={this.handleStart} disabled={isRunning}>Zacznij</button>
-                <button onClick={onEdit} disabled={isEditable}>Edytuj</button>
-                <button onClick={this.handleStop} disabled={!isRunning}>Stop</button>
-                <button onClick={this.togglePause} disabled={!isRunning}>{isPaused ? 'Wznów' : 'Pauza'}</button>
+            <React.StrictMode>
+                <div className="TimeBox">
+                    <h1>{title}</h1>
+                    <Clock minutes={minutesLeft} seconds={secondsLeft} className={isPaused ? 'inactive' : ''} />
+                    <ProgressBar procent={progressInPercent} className={isPaused ? 'inactive' : ''} />
+                    <button onClick={this.handleStart} disabled={isRunning}>Zacznij</button>
+                    <button onClick={onEdit} disabled={isEditable}>Edytuj</button>
+                    <button onClick={this.handleStop} disabled={!isRunning}>Stop</button>
+                    <button onClick={this.togglePause} disabled={!isRunning}>{isPaused ? 'Wznów' : 'Pauza'}</button>
                         LIczba przerw: {paeusesCount}
-            </div>]
+                </div>
+            </React.StrictMode>
         )
     }
 }
