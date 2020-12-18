@@ -1,12 +1,17 @@
 import React from 'react';
+import classnames from 'classnames'
 
 
 export default function TimeBoxEditor(props) {
 
     const { title, totalTimeInMinutes, onStateChange, isEditable, onConfirm } = props;
-
+    const classes = classnames(
+        'timeboxEditor',
+        {
+            'inactive': !isEditable
+        })
     return (
-        <div className="TimeboxEditor" className={isEditable ? '' : 'inactive'}>
+        <div className={classes}>
             <label>Co robisz?
                         <input
                     name="title"
@@ -24,7 +29,7 @@ export default function TimeBoxEditor(props) {
                     value={totalTimeInMinutes} />
             </label>
             <button disabled={false} onClick={onConfirm}>Zatwierdź zmiany</button>
-        </div>
+        </div >
     )
 }
 

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react'
 import { v4 as uuid } from 'uuid';
 
 import TimeBox from './TimeBox'
 import TimeBoxCreator from './TimeBoxCreator'
+import Error from './Error'
 
 export default class TimeboxList extends React.Component {
 
@@ -48,8 +49,10 @@ export default class TimeboxList extends React.Component {
 
         return (
             <>
-                <TimeBoxCreator onCreate={this.handleCreate} />,
-                {content}
+                <TimeBoxCreator onCreate={this.handleCreate} />
+                <Error message="Coś nie gra tutaj">
+                    {content}
+                </Error>
             </>
         )
     }
