@@ -15,6 +15,7 @@ export default class CurrentTimebox extends React.Component {
             paeusesCount: 0,
             elapsedTimeInSeconds: 0
         }
+        this.intervalId = null;
         this.handleStart = this.handleStart.bind(this);
         this.handleStop = this.handleStop.bind(this);
         this.togglePause = this.togglePause.bind(this);
@@ -45,22 +46,27 @@ export default class CurrentTimebox extends React.Component {
         this.stopTimer()
     }
     startTimer() {
-        this.intervalId = window.setInterval(
-            () => {
-                this.setState(
-                    (prevState) => ({ elapsedTimeInSeconds: prevState.elapsedTimeInSeconds + 0.1 })
-                )
-            },
-            100
-        );
+        if (this.intervalId === null) {
+
+            this.intervalId = window.setInterval(
+                () => {
+                    this.setState(
+                        (prevState) => ({ elapsedTimeInSeconds: prevState.elapsedTimeInSeconds + 0.1 })
+                    )
+                },
+                100
+            );
+        }
     }
     stopTimer() {
         window.clearInterval(this.intervalId);
+        this.intervalId = null;
     }
     togglePause() {
         this.setState(
             function (prevState) {
                 console.count("setState");
+                debugger
                 const isPaused = !prevState.isPaused;
                 if (isPaused) {
                     this.stopTimer();
