@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class Error extends Component {
     state = {
@@ -21,4 +22,9 @@ export default class Error extends Component {
             </div>
         )
     }
+}
+
+Error.propTypes = {
+    message: PropTypes.string.isRequired,
+    children: PropTypes.any.isRequired,
 }
