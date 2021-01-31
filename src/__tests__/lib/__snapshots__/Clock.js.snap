@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Clock> component with react-test-renderer renders properly 1`] = `
+<h2
+  className="clock"
+>
+  Pozostało 
+  00
+  :
+  <span
+    className="clock__min"
+  >
+    10
+  </span>
+  <span
+    className="clock__sepator"
+  >
+    :
+  </span>
+  <span
+    className="clock__sec"
+  >
+    20
+  </span>
+  .
+  000
+</h2>
+`;

@@ -7,7 +7,7 @@ export default class EditableTimebox extends React.Component {
     state = {
         title: "Uczę się skrótów klawiszowych",
         totalTimeInMinutes: 15,
-        isEditable: true
+        isEditable: false
     }
     handleChange = ({ target: { name, value } }) => this.setState({ [name]: value });
     handleConfirm = () => this.setState({ isEditable: false });
